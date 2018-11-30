@@ -1,0 +1,32 @@
+#LeftBlockLabel
+{
+    padding-top: 5px;
+}
+
+#PeopleSearchLine
+{
+    padding: 0px;
+    padding-bottom: 3px;
+    margin-right: 10px;
+    margin-left: 7px;
+    border-left: none;
+    border-bottom: 1px solid #000;
+}
+
+#PersonBox:hover
+{
+    background: #fff;
+}
+
+
+#StatusOff
+{
+    font-size: 16px;
+    color: #b6bfd7;
+}
+
+#StatusOn
+{
+    font-size: 16px;
+    color: #4c7ee0;
+}

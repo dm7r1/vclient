@@ -1,0 +1,80 @@
+QWidget
+{
+	border: 0px;
+	background: #fff;
+    font-size: 24px;
+    font-family: "Century Gothic";
+    color: #000;
+}
+
+QLineEdit
+{
+    padding-bottom: 3px;
+    padding-left: 10px;
+    border-left: 2px solid #9b9;
+}
+
+QCheckBox::indicator:unchecked
+{
+    background: url(resources/icons/unchecked.png);
+}
+
+QCheckBox::indicator:checked
+{
+    background: url(resources/icons/checked.png);
+}
+
+#BigVerticalLine
+{
+    background-color: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 rgb(230, 53, 157), stop:1 rgb(189, 171, 38));
+}
+
+#LittleVerticalLine
+{
+    background-color: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 rgb(80, 250, 0), stop:1 rgb(238, 34, 38));
+}
+
+QMainWindow
+{
+	background: #FFF;
+}
+
+QLayout
+{
+	background: #FFF;
+}
+
+QLabel
+{
+	border: 0px;
+	background: none;
+}
+
+QScrollBar:vertical
+{
+    border: 0px;
+    background: #FFF;
+    width:10px;
+    margin: 0px 0px 0px 0px;
+}
+
+QScrollBar::handle
+{
+	background: qlineargradient(spread:pad, x1:0 y1:1, x2:0 y2:0, stop:0 rgb(80, 250, 0), stop:1 rgb(238, 34, 38));
+	margin: 4px;
+	border-radius: 0px;
+}
+
+QScrollBar::add-line
+{
+	height: 0 px;
+}
+
+QScrollBar::sub-line
+{
+	height: 0 px;
+}
+
+QScrollBar::add-page, QScrollBar::sub-page {
+    background: #FFF;
+}

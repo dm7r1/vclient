@@ -1,0 +1,57 @@
+#AddButton {
+    background: url(resources/icons/add.png);
+}
+
+#AddButton:hover {
+    background: url(resources/icons/add.png);
+}
+
+#TextButton {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#TextButton:hover {
+    color: #f09;
+}
+
+#RemoveTextButton {
+    color: #DC4444;
+}
+
+#AcceptButton {
+    padding: 0px;
+    color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 rgb(0, 255, 0), stop:1 rgb(0, 200, 0));;
+    font-size: 24px;
+}
+
+#RefuseButton {
+    padding: 0px;
+    color: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 rgb(0, 0, 0), stop:1 rgb(160, 20, 80));;
+    font-size: 24px;
+}
+
+#RedCircle {
+    background: url("resources/icons/red_circle.png")
+}
+
+#RedTextButton {
+    color: #d61c79;
+}
+
+#GreenCircle {
+    background: url("resources/icons/green_circle.png")
+}
+
+#GreenTextButton {
+    color: #0f9033;
+}
+
+#GreenCircleSmall {
+    background: url("resources/icons/green_circle_small.png")
+}
+
+#GreenTextButtonSmall {
+    color: #0f9033;
+    font-size: 16px;
+}

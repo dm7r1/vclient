@@ -1,0 +1,5 @@
+.idea/*
+udata
+*.pyc
+*.pyd
+data/*
