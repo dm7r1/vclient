@@ -24,7 +24,7 @@ class User:
 		self.id = -1
 
 		self.pconn_manager = P2PManager(self)
-		self.server = MainClient(self, in_port=self.pconn_manager.get_in_port())
+		self.server = MainClient(self, in_port=0)
 		self.qtapp = object()
 		self.main_window = object()
 

@@ -14,6 +14,7 @@ class NetWorker:
 
 	def connect(self):
 		self.sock.connect((self.address, self.port))
+		print(self.sock.getsockname())
 
 	def send(self, data, special_cipher=None, encrypt=True):
 		req = object2bjson(data)

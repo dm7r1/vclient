@@ -41,19 +41,20 @@ class MainClient:
 	def log_in(self, login, password):
 		try:
 			session_key = gen_aes_key_int(MainClient.KEY_SIZE)
-			self.net_worker = NetWorker(address=settings.address, port=settings.mainPort, key=session_key.to_bytes(MainClient.KEY_SIZE, "big"))
+			self.net_worker = NetWorker(address=settings.server_address, port=settings.main_server_port, key=session_key.to_bytes(MainClient.KEY_SIZE, "big"))
 			self.net_worker.connect()
 			self.net_worker.send({"operation": "get_pubkey"}, encrypt=False)
 			res = self.net_worker.receive(1024, decrypt=False)
 			encrypter_rsa = CipherRSA(res["key"].encode(), None)
 			user_rsa_key = RSA.generate(2048)
 			self.user.pconn_manager.set_rsa_decrypter(CipherRSA(None, user_rsa_key))
+			self.user.pconn_manager.set_server_cipher_aes(self.net_worker.cipher_aes)
 
 			self.net_worker.send({"operation": "log_in", "data": {
 																"login": login,
 																"password": password,
 																"port": self.in_port,
-																"session_key": session_key
+																"session_key": session_key,
 									}
 								}, special_cipher=encrypter_rsa)
 			res = self.net_worker.receive(8196)
@@ -61,8 +62,12 @@ class MainClient:
 				self.user.id = res["id"]
 				self.token = res["token"]
 				self.send2server("set_user_pubkey", {
-													"user_pubkey": user_rsa_key.publickey().export_key().decode()
+													"user_pubkey": user_rsa_key.publickey().export_key().decode(),
+													"port_calls_manager": self.user.pconn_manager.get_in_port(),
+													"port_voice": self.user.pconn_manager.get_in_voice_port(),
+													"port_points": self.user.pconn_manager.get_in_pts_port()
 				})
+				self.user.pconn_manager.send_ports()
 				self.user.set_contacts_from_list([])
 
 				thread = GetThread(self.net_worker, self.user, self.token)

@@ -56,7 +56,7 @@ class PointsReceiveThread(CustomThread):
 
 	def _loop(self):
 		data, addr = self._socket.recvfrom(DATA_SIZE)
-		if not self.user.pconn_manager.is_connected or addr != self.user.pconn_manager.connected_pts_addr:
+		if not self.user.pconn_manager.is_connected:
 			return
 
 		polygons = self.handle_data(self.user.pconn_manager.cipher_aes.decrypt(data))
@@ -114,7 +114,7 @@ class PointsSendThread(CustomThread):
 			for i in range(PTS):
 				data[i * 2] = self.to255(pts[i][0])
 				data[i * 2 + 1] = self.to255(pts[i][1])
-			self._socket.sendto(self.user.pconn_manager.cipher_aes.encrypt(data), self.user.pconn_manager.connected_pts_addr)
+			self._socket.sendto(self.user.pconn_manager.server_cipher_aes.encrypt(b'\x02' + self.user.pconn_manager.connected_uid.to_bytes(4, "big") + self.user.pconn_manager.cipher_aes.encrypt(data)), self.user.pconn_manager.server_proxy_addr)
 
 	def close(self):
 		self.points_finder.release_cam()

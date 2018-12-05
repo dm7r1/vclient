@@ -4,6 +4,8 @@ from threads.audio_streams import AudioInStream, AudioOutStream
 from threads.threads_storage import Threads
 import threading
 from encryption import gen_aes_key_bytes, CipherAES
+import settings
+import time
 
 #   P2P DATA MODEL
 #   18 + KEY_SIZE * 2  bytes
@@ -27,12 +29,14 @@ class P2PManager:
 	def __init__(self, user):
 		self.user = user
 
+		self.server_proxy_addr = settings.server_address, settings.proxy_server_port
+
 		self.manager_socket = socket(AF_INET, SOCK_DGRAM)
-		self.manager_socket.bind(("localhost", 0))
+		self.manager_socket.bind(("", 0))
 		self.pts_socket = socket(AF_INET, SOCK_DGRAM)
-		self.pts_socket.bind(("localhost", 0))
+		self.pts_socket.bind(("", 0))
 		self.voice_socket = socket(AF_INET, SOCK_DGRAM)
-		self.voice_socket.bind(("localhost", 0))
+		self.voice_socket.bind(("", 0))
 
 		self.in_calls = {}
 
@@ -47,6 +51,7 @@ class P2PManager:
 		self.key = bytes()
 		self.cipher_aes = object()
 		self.decrypter_rsa = object()
+		self.server_cipher_aes = object()
 
 		self.in_handler = InHandler(self.manager_socket, self, self.user)
 		self.in_handler.start()
@@ -54,10 +59,19 @@ class P2PManager:
 		Threads.set_send_pts_thread(PointsSendThread(self.pts_socket, self.user))
 		Threads.set_audio_streams(AudioInStream(self, self.voice_socket), AudioOutStream(self, self.voice_socket))
 
+	def send_ports(self):
+		self.manager_socket.sendto(self.server_cipher_aes.encrypt(b'\x03'), self.server_proxy_addr)
+		self.voice_socket.sendto(self.server_cipher_aes.encrypt(b'\x04'), self.server_proxy_addr)
+		self.pts_socket.sendto(self.server_cipher_aes.encrypt(b'\x05'), self.server_proxy_addr)
+
+	def set_server_cipher_aes(self, cipher_aes):
+		self.server_cipher_aes = cipher_aes
+
 	def set_rsa_decrypter(self, decrypter):
 		self.decrypter_rsa = decrypter
 
 	def get_in_port(self):
+		print(self.manager_socket.getsockname())
 		return self.manager_socket.getsockname()[1]
 
 	def get_in_pts_port(self):
@@ -73,32 +87,37 @@ class P2PManager:
 		if not self.is_connected:
 			another_user = self.user.get_contact(uid)
 			addr = another_user[2]
-			self.send(Commands.CALL, addr, uid, self.get_in_pts_port(), self.get_in_voice_port())
+			self.send(Commands.CALL, uid, self.get_in_pts_port(), self.get_in_voice_port())
 			self.set_calling(uid, addr)
+			print("CALLING", addr)
 
 	def accept(self, uid):
 		if (not self.is_connected or self.connected_uid == self.user.id) and uid in self.in_calls:
 			another_user = self.user.get_contact(uid)
 			addr = another_user[2]
 			key = gen_aes_key_bytes(KEY_SIZE)
-			self.send(Commands.ACCEPT, addr, uid, self.get_in_pts_port(), self.get_in_voice_port(), key)
+			self.send(Commands.ACCEPT, uid, self.get_in_pts_port(), self.get_in_voice_port(), key)
 			in_call = self.in_calls[uid]
 			self.set_connected(uid, addr, in_call[0], in_call[1], key)
 			del self.in_calls[uid]
 
 	def refuse(self, uid):
-		self.send(Commands.STOP, self.user.get_contact(uid)[2], self.connected_uid)
+		self.send(Commands.STOP, self.connected_uid)
 
 	def stop_req(self):
-		self.send(Commands.STOP_REQ, self.connected_addr, self.connected_uid)
+		self.send(Commands.STOP_REQ, self.connected_uid)
 		self.disconnect()
 
 	def stop(self):
-		self.send(Commands.STOP, self.connected_addr, self.connected_uid)
+		self.send(Commands.STOP, self.connected_uid)
 		self.disconnect()
 
-	def send(self, command, addr, uid, pts_port=0, voice_port=0, key=bytes(KEY_SIZE)):
-		self.manager_socket.sendto(self.user.get_contact(uid)[4].encrypt(self.pack(command, self.user.id, pts_port, voice_port, key) * 2), addr)
+	def send(self, command, uid, pts_port=0, voice_port=0, key=bytes(KEY_SIZE)):
+		print(self.manager_socket.getsockname(),":::")
+		self.manager_socket.sendto(
+			self.server_cipher_aes.encrypt(b'\x00' + uid.to_bytes(4, 'big') +
+			self.user.get_contact(uid)[4].encrypt(self.pack(command, self.user.id, pts_port, voice_port, key) * 2)), self.server_proxy_addr
+		)
 
 	def set_connected(self, uid, addr, pport, vport, key):
 		self.is_connected = True
@@ -165,7 +184,7 @@ class InHandler(threading.Thread):
 			data = data[:len(data) // 2]
 			command, uid, pts_port, voice_port, key = self._p2p_manager.unpack(data)
 
-			if not self.valid_friend(uid, addr):
+			if not self.valid_friend(uid):
 				return
 
 			if command == Commands.CALL:
@@ -182,9 +201,9 @@ class InHandler(threading.Thread):
 				self.user.stop_call_gui()
 				self._p2p_manager.disconnect()
 
-	def valid_friend(self, uid, addr):
+	def valid_friend(self, uid):
 		curr_user = self.user.get_contact(uid)
-		return curr_user and curr_user[2] == addr
+		return curr_user
 
 	def valid_accept(self, uid, addr):
-		return uid == self._p2p_manager.connected_uid == uid and self._p2p_manager.connected_addr == addr
+		return uid == self._p2p_manager.connected_uid == uid
