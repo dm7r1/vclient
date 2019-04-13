@@ -36,8 +36,7 @@ class StopButton(CircleButton):
 			self.setVisible(False)
 
 		super(StopButton, self).__init__(
-			stop_call_func, text="stop",
-			css_circle_name="RedCircle", css_label_name="RedTextButton")
+			stop_call_func, text="stop", css_label_name="RedTextButton")
 
 
 class CallButton(CircleButton):
@@ -48,8 +47,7 @@ class CallButton(CircleButton):
 			user.main_window.right.remove_button.setVisible(False)
 
 		super(CallButton, self).__init__(
-			call_func, text="call",
-			css_circle_name="GreenCircle", css_label_name="GreenTextButton")
+			call_func, text="call", css_label_name="GreenTextButton")
 
 
 class RemoveButton(TextButton):

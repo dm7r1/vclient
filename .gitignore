@@ -3,3 +3,7 @@ udata
 *.pyc
 *.pyd
 data/*
+avatar.settings
+testttt.py
+test.wav
+test2.wav

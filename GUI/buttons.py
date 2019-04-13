@@ -56,6 +56,6 @@ class AddButton(CircleButton):
 			self.setVisible(False)
 		super(AddButton, self).__init__(
 			click_func_custom, text="add",
-			css_label_name="GreenTextButtonSmall", css_circle_name="GreenCircleSmall")
+			css_label_name="GreenTextButtonSmall")
 		self.setFixedSize(48, 48)
 		self.label.setFixedSize(48, 48)

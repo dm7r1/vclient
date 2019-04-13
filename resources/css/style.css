@@ -14,16 +14,6 @@ QLineEdit
     border-left: 2px solid #9b9;
 }
 
-QCheckBox::indicator:unchecked
-{
-    background: url(resources/icons/unchecked.png);
-}
-
-QCheckBox::indicator:checked
-{
-    background: url(resources/icons/checked.png);
-}
-
 #BigVerticalLine
 {
     background-color: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 rgb(230, 53, 157), stop:1 rgb(189, 171, 38));

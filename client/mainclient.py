@@ -5,6 +5,7 @@ import settings
 import client.codes as codes
 from encryption import gen_aes_key_int, CipherRSA
 from Cryptodome.PublicKey import RSA
+from avatar_settings import avatar_settings
 
 
 class MainClient:
@@ -34,6 +35,9 @@ class MainClient:
 
 	def search_people(self, q):
 		self.send2server("search_people", {"q": q})
+
+	def send_face_ss(self, ss):
+		self.send2server("set_face_ss", {"face_ss": ss})
 
 	def get_requests(self):
 		self.send2server("get_requests", {})
@@ -67,6 +71,9 @@ class MainClient:
 													"port_voice": self.user.pconn_manager.get_in_voice_port(),
 													"port_points": self.user.pconn_manager.get_in_pts_port()
 				})
+
+				self.send_face_ss(avatar_settings.ss.as_string())
+
 				self.user.pconn_manager.send_ports()
 				self.user.set_contacts_from_list([])
 

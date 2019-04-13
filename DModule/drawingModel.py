@@ -20,6 +20,7 @@ class DrawingModel:
 		if len(source_points) == 0:
 			return []
 		face_width = ((source_points[16, 0] - source_points[0, 0]) + self._last_face_width * 15) // 16
+
 		self._last_face_width = face_width
 		ky = (1 / face_width * -1) * 1.1
 		kx = ky * self._w2h
@@ -31,6 +32,7 @@ class DrawingModel:
 		for i in range(70):
 			points[i, 0] = source_points[i, 0] * kx + delta_x  # 0.0025 sec
 			points[i, 1] = source_points[i, 1] * ky + delta_y
+
 		self._face_dmodule.calc_points(points)  # 0.001 sec
 		self._eyes_dmodule.calc_points(points)  #
 

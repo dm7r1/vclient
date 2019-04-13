@@ -21,3 +21,7 @@ def drawf(polys):
 			i += 1
 		glEnd()
 	glFlush()
+
+
+
+xyc = [(1, 2), (3, 4), (5, 6), (1.0, 1.0, 1.0)]

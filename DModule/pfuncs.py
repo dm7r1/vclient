@@ -9,6 +9,14 @@ def to01(clr):
 			clr[i] = 1
 
 
+def scale_with_special_axis(x0, y0, x1, y1, angle_sin, k):
+	angle_sin_sqr = angle_sin ** 2
+	yc = (y0 + x1 * angle_sin + y1 * angle_sin_sqr - x0 * angle_sin) / (1 + angle_sin_sqr)
+	xc = x1 - (yc - y1) * angle_sin
+
+	return xc + (x1 - xc) * k, yc + (y1 - yc) * k
+
+
 def light(r, g, b, x, y):  # TODO FIX
 	d = math.sqrt((x - 200) ** 2 + (y - 200) ** 2)
 	d = int(d // 15 * 3)
@@ -57,6 +65,16 @@ def delta(p1, p2):
 
 def psum(p1, p2):
 	return p1[0] + p2[0], p1[1] + p2[1]
+
+
+def rgbsum(rgb1, rgb2):
+	new_clr = [rgb1[0] + rgb2[0], rgb1[1] + rgb2[1], rgb1[2] + rgb2[2]]
+	for i in range(3):
+		if new_clr[i] > 1:
+			new_clr[i] = 1
+		elif new_clr[i] < 0:
+			new_clr[i] = 0
+	return new_clr
 
 
 def med(*points):

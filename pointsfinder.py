@@ -3,6 +3,9 @@ import imutils
 import dlib
 import math
 import numpy as np
+from DModule.pfuncs import scale_with_special_axis
+from math import sqrt
+from avatar_settings import avatar_settings
 from imutils import face_utils
 
 
@@ -69,6 +72,22 @@ class PointsFinder:
 			pupils = self._find_pupils()
 
 			self._shape = np.append(self._shape, pupils, axis=0)
+
+			# post production
+
+			points = self._shape
+			face_width_a = sqrt((points[16, 1] - points[0, 1]) ** 2 + (points[16, 0] - points[0, 0]) ** 2)
+			ang_sin = ((points[16, 1] - points[0, 1]) / face_width_a)
+			kw = avatar_settings.face_width_k
+			kh = avatar_settings.face_height_k
+			k = (kh / kw)
+			x0, y0 = points[30, 0], points[30, 1]
+			for i in range(70):
+				points[i, 0], points[i, 1] = x0 + (points[i, 0] - x0) * kw, y0 + (points[i, 1] - y0) * kw
+			for i in range(70):
+				points[i, 0], points[i, 1] = scale_with_special_axis(x0, y0, points[i, 0], points[i, 1],
+																	 angle_sin=ang_sin, k=k)
+
 			return self._shape
 		except Exception:
 			return tuple()

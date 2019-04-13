@@ -1,11 +1,3 @@
-#AddButton {
-    background: url(resources/icons/add.png);
-}
-
-#AddButton:hover {
-    background: url(resources/icons/add.png);
-}
-
 #TextButton {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -31,24 +23,12 @@
     font-size: 24px;
 }
 
-#RedCircle {
-    background: url("resources/icons/red_circle.png")
-}
-
 #RedTextButton {
     color: #d61c79;
 }
 
-#GreenCircle {
-    background: url("resources/icons/green_circle.png")
-}
-
 #GreenTextButton {
     color: #0f9033;
-}
-
-#GreenCircleSmall {
-    background: url("resources/icons/green_circle_small.png")
 }
 
 #GreenTextButtonSmall {

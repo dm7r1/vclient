@@ -1,4 +1,5 @@
 from DModule.pfuncs import *
+import avatar_settings
 
 
 class FaceDModule:
@@ -83,10 +84,10 @@ class FaceDModule:
 		polygon_xyc = list()
 		j = 0
 		for polygons_set, color in (
-				(self._face_polygons, (247 / 255, 173 / 255, 134 / 255)),
-				(self._nose_sides_polygons, (232 / 255, 162 / 255, 119 / 255)),
-				(self._lips_polygons, (200 / 255, 70 / 255, 0 / 255)),
-				(self._brows_polygons, (100 / 255, 50 / 255, 50 / 255)),
+				(self._face_polygons, avatar_settings.another_avatar_ss.skin_color),
+				(self._nose_sides_polygons, avatar_settings.another_avatar_ss.nose_sides_color),
+				(self._lips_polygons, avatar_settings.another_avatar_ss.lips_color),
+				(self._brows_polygons, avatar_settings.another_avatar_ss.brows_color),
 				(self._black_polygons, (0, 0, 0)),
 		):
 			for polygon in polygons_set:

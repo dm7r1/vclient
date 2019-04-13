@@ -2,10 +2,11 @@ from socket import socket, AF_INET, SOCK_DGRAM
 from threads.points_threads import PointsSendThread, PointsReceiveThread
 from threads.audio_streams import AudioInStream, AudioOutStream
 from threads.threads_storage import Threads
+import avatar_settings
 import threading
 from encryption import gen_aes_key_bytes, CipherAES
 import settings
-import time
+import pickle
 
 #   P2P DATA MODEL
 #   18 + KEY_SIZE * 2  bytes
@@ -125,6 +126,7 @@ class P2PManager:
 		self.connected_addr = addr
 		self.connected_pts_addr = addr[0], pport
 		self.connected_voice_addr = addr[0], vport
+		avatar_settings.another_avatar_ss = avatar_settings.SharedSettings.from_string(self.user.get_contact(uid)[5])
 
 		self.cipher_aes = CipherAES(key)
 
@@ -132,7 +134,8 @@ class P2PManager:
 
 		self.user.call_gui(uid)
 		Threads.start_audio_streams()
-		Threads.send_pts_thread.start()
+		if avatar_settings.avatar_settings.show_avatar:
+			Threads.send_pts_thread.start()
 
 	def set_calling(self, uid, addr):
 		self.is_calling = True

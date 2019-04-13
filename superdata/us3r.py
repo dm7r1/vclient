@@ -51,7 +51,7 @@ class User:
 	def set_contacts_from_list(self, contacts):
 		self.user_data.contacts = {}
 		for contact in contacts:
-			self.user_data.contacts[contact[0]] = contact[0], contact[1], (contact[3], contact[4]), contact[2], None if len(contact[5]) == 0 else PKCS1_OAEP.new(RSA.import_key(contact[5].encode()))
+			self.user_data.contacts[contact[0]] = [contact[0], contact[1], (contact[3], contact[4]), contact[2], None if len(contact[5]) == 0 else PKCS1_OAEP.new(RSA.import_key(contact[5].encode())), contact[6]]
 
 	def set_requests(self, requests):
 		self.user_data.requests = requests

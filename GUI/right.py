@@ -70,7 +70,7 @@ class RightContainer(QFrame):
 	def event(self, event):
 		if event.type() == 666:
 			self.call_button.setVisible(True)
-			self.stop_button.setVisible(False)
+			# self.stop_button.setVisible(False)
 			self.remove_button.setVisible(True)
 			self.login_label.setVisible(True)
 			self.login_label.setText(user.get_contact(GUIStates.get_contact_id())[1])

@@ -1,7 +1,7 @@
 from numpy import int16
 
 # server
-server_address = "35.228.127.113"
+server_address = "127.0.0.1" #"35.228.127.113"
 main_server_port = 7777
 proxy_server_port = 8888
 

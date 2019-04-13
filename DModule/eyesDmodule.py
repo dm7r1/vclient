@@ -2,6 +2,7 @@ from DModule.pfuncs import *
 import numpy as np
 from math import sin as msin, cos as mcos, pi, sqrt
 from DModule.pfuncs import dist
+from avatar_settings import another_avatar_ss
 
 
 class EyesDmodule:
@@ -9,7 +10,6 @@ class EyesDmodule:
 
 	def __init__(self):
 		self._pupil_rgb = 0, 0, 0
-		self._iris_rgb = 0.35, 0.15, 0.15 # 0.0, 0.65, 0.0
 		self._vertexes = 10
 		s, c = msin(pi / self._vertexes * 2), mcos(pi / self._vertexes * 2)
 		self._rotate_matrix = np.array(((c, s), (-s, c)))
@@ -60,7 +60,7 @@ class EyesDmodule:
 				line_iris.append((self._eyes_pts[e, 1, i, 0], self._eyes_pts[e, 1, i, 1]))  # xy
 				line_iris.append(
 					shine(
-						self._iris_rgb, i % 16
+						another_avatar_ss.irises_color, i % 16
 					)
 				)
 				polygon_xyc.append(line_iris)
